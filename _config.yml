@@ -4,13 +4,14 @@ longtitle:        Sunflowers Book
 author:           Thieu Luu
 email:            lvdthieu@gmail.com
 description: >
-  Một nơi lưu trữ và chia sẻ những kiến thức về lập trình, AI và hơn thế nữa
+  A blog about coding, AI and more
 
 version:          1.0
 gitbook_version:  1.0.0
 
-url:              'https://masterSunflowers.github.io'
-baseurl:          '/xinchao'
+domain:           'mastersunflowers.github.io'
+url:              'https://mastersunflowers.github.io'
+baseurl:          ''
 rss:              RSS
 
 # bootstrap: use the remote theme for the site itself
@@ -63,5 +64,5 @@ regenerate:       true
 
 plugins:
   - jekyll-feed
-  # - jekyll-readme-index
+  - jekyll-readme-index
   - jemoji
