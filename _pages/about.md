@@ -28,7 +28,7 @@ Hallo guys,
 
 #### Description
 
-Each day I will need to:
+Each day I need to:
 
 1. Reading at least 5 pages of book
 2. Workout at least 30 minutes or swimming at least 800m
@@ -44,4 +44,3 @@ Each day I will need to:
 | 2025-01-15 |   |   |   |   |   |   |   |
 | 2025-01-22 |   |   |   |   |   |   |   |
 | 2025-01-29 |   |   |   |   |   |   |   |
-
