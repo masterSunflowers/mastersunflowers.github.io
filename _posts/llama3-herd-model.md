@@ -2,11 +2,15 @@
 title: Llama 3 Herd Model
 author: Thieu Luu
 date: 2025-01-01
-category: basemodel
+category: foundation-model
 layout: post
 ---
+## Data
 
-# Data
+## Techniques
 
-# Techniques
+## Related terms
 
+- PPO (Proximal Policy Optimization):
+
+- DPO (Direct Preference Optimization):

@@ -22,7 +22,7 @@ Hallo guys,
 3. mektoub (The Alchemist - Paul Coelho)
 4. Just as a well-filled day brings blessed sleep, so a well-employed life brings blessed death (Leonardo da Vinci)
 
-## Challenges
+<!-- ## Challenges
 
 ### Change the world
 
@@ -43,4 +43,4 @@ Each day I need to:
 | 2025-01-08 |   |   |   |   |   |   |   |
 | 2025-01-15 |   |   |   |   |   |   |   |
 | 2025-01-22 |   |   |   |   |   |   |   |
-| 2025-01-29 |   |   |   |   |   |   |   |
+| 2025-01-29 |   |   |   |   |   |   |   | -->
