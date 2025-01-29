@@ -49,6 +49,7 @@ $$
 The encoded vector for row 0 will be `[0, 1, 0, 1, …, 0, 1]`
 
 ## Encoder layer
+
 ![encoder_layer](../images/Transformers/encoder.jpg)
 Encoder includes Multi-Head Attention Layer (in the original paper it is 8 heads), after that is a Add and Norm Layer which contain a residual connection and a normalization function. After is a Position-wise Fully Connected Feed-forward Network.
 
@@ -77,9 +78,15 @@ $$
 And then we have:
 
 $$
-K = X_t * W_k \\
-Q = X_t * W_q \\
-V = X_t * W_v \\
+K = X_t * W_k
+$$
+
+$$
+Q = X_t * W_q
+$$
+
+$$
+V = X_t * W_v
 $$
 
 `W_k` is a matrix with dimension `d_embedding * d_k`
@@ -94,8 +101,29 @@ In the paper, because of residual connection, the output of Multi-Head Attention
 
 For more accurate and shortage, I will call the dimension of intermediate matrix in the encoder is `d_model` because `d_model` can different than `d_embedding` among architectures but in this case `d_model` need to equal `d_embedding` because of residual connection.
 
-Each head in Multi-Heads Attention Layer have the same functionality, which will forward input (K, Q, V) as:
+Each head in Multi-Heads Attention Layer have the same functionality, which will forward input `(K, Q, V)` as:
 
 $$
     Attention(K, Q, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
 $$
+
+The output of this shoud be a matrix with `num_tokens * d_v`, apply input to this we will have `7 * (d_model / num_heads)`, assume `d_model = d_embedding = 512` and `num_heads = 8` as in the original paper, it should be `7 * 64` matrix.
+
+The output of 8 heads will be concatenated across row axis, so the output of Multi-Head Attention Layer will be `7 * 512`.
+
+Then this output will be added with `X_t` matrix (which also have dimension as `7 * 512`) to create a residual connection, and then the result will be normalized using Layer Normalization (which normalize range of feature values across layer).
+
+The result of previous step will go through a Pointwise Feed Forward Layer, this sub-layer include two layers (in the original paper) with parameters matrix `512 * 2048` and `2048 * 512` and ReLU activation in the first layer. We can see this clearly in [HuggingFace's transformers implementation](https://github.com/huggingface/transformers/blob/ec7afad60909dd97d998c1f14681812d69a15728/src/transformers/models/ctrl/modeling_ctrl.py)
+
+```python
+def point_wise_feed_forward_network(d_model_size, dff):
+    return nn.Sequential(nn.Linear(d_model_size, dff), nn.ReLU(), nn.Linear(dff, d_model_size))
+```
+
+Then the result of this layer will be addes with `X_t` and normalized.
+
+Be noticed that, there are 6 encoders, the output of previous encoder is the input of the following encoder. The output of the last encoder will be a matrix represent the encoding of input. This will be an input of decoder, which will be described in the rest of this post.
+
+### What happens in decoder?
+
+
