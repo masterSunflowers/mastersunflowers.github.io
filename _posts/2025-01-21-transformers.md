@@ -2,7 +2,7 @@
 title: Transformers
 author: Thieu Luu
 date: 2025-01-21
-category: architecture
+category: architecture, LLM
 layout: post
 ---
 # Introduction
@@ -126,4 +126,4 @@ Be noticed that, there are 6 encoders, the output of previous encoder is the inp
 
 ### What happens in decoder?
 
-
+At the beginning, input of decoder is also go through embedding layer and position encoding layer, the results will be added to make `X_t` matrix. Then, the output will feed into Masked Multi-Head Attention Layer. This layer is also like Multi-Head Attention Layer except that there is additional step after calculate 

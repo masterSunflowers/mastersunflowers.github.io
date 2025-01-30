@@ -2,7 +2,7 @@
 title: Llama 3 Herd Model
 author: Thieu Luu
 date: 2025-01-01
-category: foundation-model
+category: foundation-model, LLM
 layout: post
 ---
 ## Data
