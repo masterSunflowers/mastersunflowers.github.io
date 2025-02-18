@@ -40,3 +40,18 @@ Cross-entropy là một hàm mất mát, đo sự sai khác giữa kết quả d
 
 ![derivative1](../images/CrossEntropy/derivative1.jpg)
 ![derivative2](../images/CrossEntropy/derivative2.jpg)
+
+# Thảo luận
+
+- SparseCategoricalCrossEntroy vs CategoricalCrossEntropy: chữ sparse ở đây có nghĩa rằng thay vì lưu label ở dạng one-hot encoded vector (ví dụ: `[1, 0, 0]`) thì sẽ lưu label ở dạng vị trí của nó trong danh sách label (`[0]`), như vậy, label sẽ là các giá trị từ 0 đến `num_label - 1`. Điều này sẽ giúp tiết kiệm bộ nhớ hơn. Khi tính hàm loss, thay vì sử dụng công thức:
+
+$$
+L = -\frac{1}{m}\sum_{i=1}^{m}H(y_i, \hat{y_i})
+$$
+
+Ta chỉ cần sử dụng công thức:
+
+$$
+L = -\frac{1}{m}\sum_{i=1}^{m}-log(\hat{y_i}_{y_i})
+$$
+do đó tiết kiệm được nỗ lực tính toán. Nhược điểm của cách làm này là do label được lưu dưới dạng vị trí nên chỉ phù hợp với các bài toán dự đoán 1 label trong bài toán multi-class, không giải quyết được cái bài toán phức tạp như multi-label hoặc các bài toán yêu cầu label là một distribution cụ thể.
