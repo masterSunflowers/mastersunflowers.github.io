@@ -21,7 +21,7 @@ In the original paper, Transformers include two main components. The first compo
 
 ![embedding_layer](../images/Transformers/embedding.png)
 
-Input will go through an embedding layer first in both encoder and decoder
+Input will go through an embedding layer first in both encoder and decoder, this layer will convert each token into a vector with size `d_embedding`, in the training process, this layer will be also trained to learn the representation of each token through backpropagation algorithm.
 
 ## Position encoding
 
@@ -35,7 +35,7 @@ $$
 PE(pos, 2i+1) = cos(pos/10000^{2i/d_{embedding}})
 $$
 
- In which, `i` takes a integer value from `0` to `d_embedding / 2`
+`i` takes a integer value from `0` to `d_embedding / 2`
 
 For example, with `pos = 0` , `d_embedding = 512` , we have:
 
@@ -55,7 +55,13 @@ Encoder includes Multi-Head Attention Layer (in the original paper it is 8 heads
 
 ## Decoder layer
 
-Decoder is quite same as encoder except that it contain a Masked-Multi-Head Attention Layer at the beginning.
+Decoder is quite same as encoder except that it contain a Masked-Multi-Head Attention Layer at the beginning and a Multi-Head Attention Layer which take the output of encoder as input. The Masked-Multi-Head Attention Layer is used to prevent the decoder from seeing the future tokens.
+![decoder_layer](../images/Transformers/decoder.jpg)
+
+## Multi-Head Attention (MHA)
+
+![mha](../images/Transformers/mha.jpg)
+This is the main part of the Transformer architecture. It is a combination of multiple attention layers. Each attention layer is a scaled dot-product attention layer. The output of each attention layer is then concatenated and passed through a linear layer. The output of the linear layer will present the effect of other tokens in the sequence to the current token.
 
 # How it works
 
@@ -63,11 +69,11 @@ Now, we need to deep dive in how this architecture actually work in training and
 
 ## Training phase
 
-For a training sample with input is “I am mastersunflowers” and the expected output is “Toi la bac thay hoa huong duong”. For simplicity, assume tokenizer will tokenize sentence as follow: “<start>”,  “I",  “am",  “master", “sun", “flowers", “<end>” and “<SOS>”, “Toi", “la", “bac", “thay", “hoa", “huong”, “duong", “<EOS>”.
+For a training sample with input is “I am mastersunflowers” and the expected output is “Toi la bac thay hoa huong duong”. For simplicity, assume tokenizer will tokenize sentence as follow: “<SOS>”,  “I",  “am",  “master", “sun", “flowers", “<EOS>” and “<SOS>”, “Toi", “la", “bac", “thay", “hoa", “huong”, “duong", “<EOS>”.
 
-### What happens in encoder?
+### What happens in the encoder layer?
 
-The input, as introduced at Embedding Layer part, will be embedding into a 7 *`d_embedding` matrix, then the input also through Position Encoding layer, which produce also a 7* `d_embedding` matrix, each row will contains a value that can represent the postion of input token.
+The input, as introduced at Embedding Layer part, will be embedding into a `7 *d_embedding` matrix, then the input also through Position Encoding layer, which produce also a `7* d_embedding` matrix, each row will contains a value that can represent the postion of input token.
 
 I will annotate the input is `X`, the embedding `X` is `X_e`, the postion is `X_p`, so, the matrix to push into first sub-layer of encoder is
 
@@ -126,7 +132,8 @@ Be noticed that, there are 6 encoders, the output of previous encoder is the inp
 
 ### What happens in decoder?
 
-At the beginning, input of decoder is also go through embedding layer and position encoding layer, the results will be added to make `X_t` matrix. Then, the output will feed into Masked Multi-Head Attention Layer. This layer is also like Multi-Head Attention Layer except that there is additional step after calculate `
+At the beginning, input of decoder is also go through embedding layer and position encoding layer, the results will be added to make `X_t` matrix. Then, the output will feed into Masked Multi-Head Attention Layer. This layer is also like Multi-Head Attention Layer except that there is additional step when calculate `
 $$
     Attention(K, Q, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
 $$
+
