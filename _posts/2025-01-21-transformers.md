@@ -129,11 +129,48 @@ def point_wise_feed_forward_network(d_model_size, dff):
 Then the result of this layer will be addes with `X_t` and normalized.
 
 Be noticed that, there are 6 encoders, the output of previous encoder is the input of the following encoder. The output of the last encoder will be a matrix represent the encoding of input. This will be an input of decoder, which will be described in the rest of this post.
+I will called the final output of encoder is `X_e`.
 
 ### What happens in decoder?
 
-At the beginning, input of decoder is also go through embedding layer and position encoding layer, the results will be added to make `X_t` matrix. Then, the output will feed into Masked Multi-Head Attention Layer. This layer is also like Multi-Head Attention Layer except that there is additional step when calculate `
+At the beginning, input of decoder is also go through embedding layer and position encoding layer, the results will be added to make `X_t` matrix. Then, the output will feed into Masked Multi-Head Attention Layer. This layer is also like Multi-Head Attention Layer except that there is additional step when calculate
 $$
     Attention(K, Q, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
+$$: before multiple by `V`, there is a mask matrix `M` which is a lower triangle matrix. The result of $$M * softmax(\frac{QK^T}{\sqrt{d_k}})$$ will be multiple by `V`. This ensure that the output of decoder will not be affected by the future tokens.
+Then, the output of Masked Multi-Head Attention Layer will be added with `X_t` and normalized to produce `X_mmha`. The result take as the input of Multi-Head Attention Layer. At this point we will have:
+
 $$
+    Q = W_q * X_{mmha}
+$$
+
+$$
+    K = W_k * X_e
+$$
+
+$$
+    V = W_v * X_e
+$$
+
+These matrices will be pass through the Multi-Head-Attention Layer (which also called cross_attention to distinguish from self_attention in the encoder). The remain steps are similar to the encoder, the output of this layer will be added with `X_mmha` and normalized. The result will be the input of Point-Wise Feed Forward Network. The output of this layer will be added with the result of Multi-Head Attention Layer and normalized.
+At the end, the output of decoder will be pass through a Linear layer, which map the output to the vocabulary size and the activation function is softmax. The output of this layer will represent the probability distribution of each word for all the position in the target text.
+
+### How to calculate the loss?
+
+The loss function is cross entropy loss. The target is the one-hot vector of the target text. The loss will be calculated by calculate the distance between two distribution:
+
+$$
+    L = - \sum_{i=1}^{n} y_i \log(\hat{y}_i)
+$$
+
+
+where $y_i$ is the target distribution and $\hat{y}_i$ is the predicted distribution. The loss will be calculated for each word in the target text and then averaged.
+
+## Inference phase
+
+The inference phase still have steps similar to the training phase in the encoder part. The difference is that there isn't a target text, so we will use the output of the previous time step as the input of the current time step. At the begin, the input of the decoder is a start token. The process will be repeated until the model predict an end token or the generated text reach the max length.
+
+Be noted that, we only use the final last hidden state of the decoder as the input of the linear layer to predict the next token. The other hidden states are not used. One more important difference is that in the inference phase, we do not need to mask the future tokens. It means that Masked-Multi-Head Attention Layer will have affect like Multi-Head Attention Layer.
+
+
+
 
