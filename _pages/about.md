@@ -9,10 +9,12 @@ layout: post
 
 Hallo guys,
 
-- 🔭 I’m currently working on AI for Software Engineering
-- 🌱 I’m currently learning Llama3, GraphRAG
-- 📫 How to reach me: <lvdthieu@gmail.com>
-
+- 🔭 I’m currently working on AI for Software Engineering and Agentic AI
+- 🌱 I’m currently diving into LLM architectures, MCP and Agent Orchestration
+- 📫 How to reach me: 
+    - Mail:     <lvdthieu@gmail.com>
+    - Linkedin: [mastersunflowers](https://www.linkedin.com/in/mastersunflowers)
+    - Github: [mastersunflowers](https://github.com/masterSunflowers)
 ## Reading
 
 🥑 Some words, phrases I have heard, read somewhere, "somewhen" :)
@@ -21,26 +23,3 @@ Hallo guys,
 2. chutzpah, rosh gadol (Start-up Nation - Dan Senor, Saul Singer)
 3. mektoub (The Alchemist - Paul Coelho)
 4. Just as a well-filled day brings blessed sleep, so a well-employed life brings blessed death (Leonardo da Vinci)
-
-<!-- ## Challenges
-
-### Change the world
-
-#### Description
-
-Each day I need to:
-
-1. Reading at least 5 pages of book
-2. Workout at least 30 minutes or swimming at least 800m
-3. Learn coursera course 20 minutes
-4. Meditation 5 minutes
-
-### Progress
-
-| thieulvd | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 2025-01-01 |  |   |🔥  |   |   |   |   |
-| 2025-01-08 |   |   |   |   |   |   |   |
-| 2025-01-15 |   |   |   |   |   |   |   |
-| 2025-01-22 |   |   |   |   |   |   |   |
-| 2025-01-29 |   |   |   |   |   |   |   | -->

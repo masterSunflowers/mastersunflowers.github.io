@@ -5,7 +5,7 @@ permalink: /
 ---
 ## Introduction
 
-Welcome to my personal book, a digital garden where I share my thoughts, ideas, and learnings. This space is a reflection of my journey, a collection of my experiences, and a manifestation of my growth.
+Welcome to my personal book, a digital garden where I share my thoughts, ideas, and knowledges. This space is a reflection of my journey, a collection of my experiences, and a manifestation of my growth.
 
 ## About this project
 
