@@ -51,7 +51,7 @@ def resolve_wikilinks(body: str, index: dict) -> str:
             label = target.split("/")[-1]
         return _link_replacement(target, label, index)
 
-    return re.sub(r"\[\[([^\]]+)\]\]", repl, body)
+    return re.sub(r"(?<!!)\[\[([^\]]+)\]\]", repl, body)
 
 
 def rewrite_image_embeds(body: str, slug: str):

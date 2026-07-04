@@ -60,8 +60,21 @@ def test_rewrite_image_embeds():
     assert imgs == ["diagram.png"]
 
 
+def test_resolve_wikilinks_leaves_image_embeds_intact():
+    body = "text ![[diagram.png]] and [[Foo|Foo]] end"
+    after_links = resolve_wikilinks(body, {})
+    # the image embed must be untouched by wikilink resolution
+    assert "![[diagram.png]]" in after_links
+    out, imgs = rewrite_image_embeds(after_links, "my-slug")
+    assert out == "text ![](../images/my-slug/diagram.png) and Foo end"
+    assert imgs == ["diagram.png"]
+
+
 def test_render_post_emits_frontmatter_and_body():
     out = render_post({"title": "A", "layout": "post"}, "Body here")
     assert out.startswith("---\n")
     assert "title: A" in out
     assert out.rstrip().endswith("Body here")
+    lines = out.split("\n")
+    assert lines[1] == "title: A"
+    assert lines[2] == "layout: post"
