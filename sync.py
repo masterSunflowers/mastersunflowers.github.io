@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import subprocess
+import sys
 from pathlib import Path
 
 from wiki_sync.config import load_config
@@ -66,6 +67,11 @@ def _git_sync(branch: str, push: bool) -> None:
 
 
 def main() -> None:
+    # Note titles/paths contain Vietnamese; force UTF-8 stdout so progress
+    # prints don't crash on a Windows console using a legacy code page (cp1252).
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
     parser = argparse.ArgumentParser(description="Sync LLM Wiki notes to the Jekyll site.")
     parser.add_argument("--dry-run", action="store_true", help="Preview without writing or committing.")
     parser.add_argument("--no-push", action="store_true", help="Convert and commit, but do not push.")
