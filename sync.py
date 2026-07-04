@@ -52,8 +52,8 @@ def run(dry_run: bool, push: bool) -> None:
 
 def _git_sync(branch: str, push: bool) -> None:
     subprocess.run(["git", "add", "_posts", "images", str(MANIFEST_PATH)], check=True)
-    status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
-    if not status.stdout.strip():
+    staged = subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode
+    if staged == 0:
         print("[git] nothing to sync.")
         return
     msg = f"chore: sync wiki {datetime.date.today().isoformat()}"

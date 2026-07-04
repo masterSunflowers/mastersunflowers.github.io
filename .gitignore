@@ -4,3 +4,7 @@ _site
 .jekyll-metadata
 vendor
 Gemfile.lock
+__pycache__/
+*.pyc
+.pytest_cache/
+.superpowers/
