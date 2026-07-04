@@ -78,3 +78,36 @@ def test_render_post_emits_frontmatter_and_body():
     lines = out.split("\n")
     assert lines[1] == "title: A"
     assert lines[2] == "layout: post"
+
+
+from wiki_sync.transformer import map_frontmatter, transform_note
+from wiki_sync.config import Config
+
+
+def _cfg():
+    return Config(
+        vault_wiki_path=Path("wiki"), posts_dir=Path("_posts"), images_dir=Path("images"),
+        default_author="Thieu Luu", default_category="LLM Wiki", git_branch="main",
+    )
+
+
+def _note_full(meta, content):
+    return Note(path=Path("x.md"), rel_id="Notes/T", basename="T", metadata=meta, content=content)
+
+
+def test_map_frontmatter_defaults():
+    note = _note_full({"title": "Deep Q-Network",
+                       "topics": ["[[Topics/RL for Robotics|RL for Robotics]]"]}, "")
+    fm = map_frontmatter(note, "2026-06-27", _cfg())
+    assert fm == {"title": "Deep Q-Network", "author": "Thieu Luu",
+                  "date": "2026-06-27", "category": "RL for Robotics", "layout": "post"}
+
+
+def test_transform_note_produces_basename_and_content():
+    note = _note_full({"title": "Deep Q-Network"}, "Body with [[T|self]] link")
+    idx = {"Notes/T": "2026-06-27-deep-q-network", "T": "2026-06-27-deep-q-network"}
+    basename, content, imgs = transform_note(note, "2026-06-27", idx, _cfg())
+    assert basename == "2026-06-27-deep-q-network"
+    assert "layout: post" in content
+    assert "{% post_url 2026-06-27-deep-q-network %}" in content
+    assert imgs == []

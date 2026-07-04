@@ -69,3 +69,22 @@ def rewrite_image_embeds(body: str, slug: str):
 def render_post(frontmatter: dict, body: str) -> str:
     fm = yaml.safe_dump(frontmatter, allow_unicode=True, sort_keys=False).strip()
     return f"---\n{fm}\n---\n\n{body.strip()}\n"
+
+
+def map_frontmatter(note, date: str, config) -> dict:
+    return {
+        "title": note.metadata["title"],
+        "author": note.metadata.get("author", config.default_author),
+        "date": date,
+        "category": extract_category(note.metadata, config.default_category),
+        "layout": "post",
+    }
+
+
+def transform_note(note, date: str, index: dict, config):
+    slug = slugify(note.metadata["title"])
+    post_basename = f"{date}-{slug}"
+    body = resolve_wikilinks(note.content, index)
+    body, images = rewrite_image_embeds(body, slug)
+    content = render_post(map_frontmatter(note, date, config), body)
+    return post_basename, content, images
