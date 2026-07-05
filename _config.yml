@@ -46,6 +46,13 @@ permalink:                /:categories/:year-:month-:day-:title:output_ext
 
 exclude:
   - _drafts
+  - docs          # internal plans/specs; contain example Liquid tags, not site content
+  - sync.py
+  - sync.ps1
+  - wiki_sync
+  - tests
+  - requirements.txt
+  - sync_config.example.yml
 
 collections:
   pages:
