@@ -66,6 +66,25 @@ def rewrite_image_embeds(body: str, slug: str):
     return new_body, images
 
 
+# kramdown uses GFM input, so a bare `|` — even inside `$...$` math — is read
+# as a table-column delimiter and shreds the formula into a stray HTML table.
+# Obsidian renders the same source fine, so notes are authored with plain `|`.
+# Rewrite pipes *inside math spans only* to TeX equivalents (`||` -> \|, a
+# single `|` -> \mid) while leaving real Markdown table pipes untouched.
+_MATH_SPAN = re.compile(r"\$\$.+?\$\$|\$.+?\$", re.DOTALL)
+
+
+def _escape_span(match: "re.Match") -> str:
+    span = match.group(0)
+    span = re.sub(r"(?<!\\)\|\|", r"\\|", span)      # norm / KL: || -> \|
+    span = re.sub(r"(?<!\\)\|", r"\\mid ", span)     # conditional / abs: | -> \mid
+    return span
+
+
+def escape_math_pipes(body: str) -> str:
+    return _MATH_SPAN.sub(_escape_span, body)
+
+
 def render_post(frontmatter: dict, body: str) -> str:
     fm = yaml.safe_dump(frontmatter, allow_unicode=True, sort_keys=False).strip()
     return f"---\n{fm}\n---\n\n{body.strip()}\n"
@@ -86,5 +105,6 @@ def transform_note(note, date: str, index: dict, config):
     post_basename = f"{date}-{slug}"
     body = resolve_wikilinks(note.content, index)
     body, images = rewrite_image_embeds(body, slug)
+    body = escape_math_pipes(body)
     content = render_post(map_frontmatter(note, date, config), body)
     return post_basename, content, images

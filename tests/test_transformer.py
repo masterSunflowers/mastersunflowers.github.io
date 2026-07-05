@@ -111,3 +111,43 @@ def test_transform_note_produces_basename_and_content():
     assert "layout: post" in content
     assert "{% post_url 2026-06-27-deep-q-network %}" in content
     assert imgs == []
+
+
+from wiki_sync.transformer import escape_math_pipes
+
+
+def test_escape_math_pipe_conditional_bar_inline():
+    # A single | inside math becomes \mid so kramdown (GFM) does not read it
+    # as a table-column delimiter and split the formula into a stray table.
+    assert escape_math_pipes("$E[R_t|A_t=a]$") == "$E[R_t\\mid A_t=a]$"
+
+
+def test_escape_math_pipe_absolute_value():
+    assert escape_math_pipes("$\\sum_j |w_j|$") == "$\\sum_j \\mid w_j\\mid $"
+
+
+def test_escape_math_pipe_double_bar_becomes_norm():
+    # || (norm / KL divergence) collapses to the proper \| control symbol
+    assert escape_math_pipes("$||w||$") == "$\\|w\\|$"
+
+
+def test_escape_math_pipe_display_math_multiline():
+    assert escape_math_pipes("$$a\n|b$$") == "$$a\n\\mid b$$"
+
+
+def test_escape_math_pipe_leaves_table_pipes_untouched():
+    # Real Markdown table pipes live outside math and must survive.
+    body = "| a | b |\nText $x|y$ end"
+    assert escape_math_pipes(body) == "| a | b |\nText $x\\mid y$ end"
+
+
+def test_escape_math_pipe_does_not_double_escape():
+    # Already-escaped \| must not turn into \\| (which is a line break in TeX).
+    assert escape_math_pipes("$a \\| b$") == "$a \\| b$"
+
+
+def test_transform_note_escapes_math_pipes():
+    note = _note_full({"title": "Reg"}, "Penalty $\\sum_j |w_j|$ here")
+    _, content, _ = transform_note(note, "2026-06-26", {}, _cfg())
+    assert "$\\sum_j \\mid w_j\\mid $" in content
+    assert "|w_j|" not in content
