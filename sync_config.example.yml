@@ -1,0 +1,9 @@
+# Copy this file to `sync_config.yml` and adjust the values for your machine.
+# `sync_config.yml` is gitignored because vault_wiki_path is machine-specific.
+
+vault_wiki_path: "G:/My Drive/DriveSyncFiles/Obsidian/Knowledge/LLM Wiki"  # absolute path to your Obsidian wiki folder
+posts_dir: "_posts"
+images_dir: "images"
+default_author: "Thieu Luu"
+default_category: "LLM Wiki"
+git_branch: "main"

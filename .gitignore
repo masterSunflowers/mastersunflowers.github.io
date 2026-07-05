@@ -8,3 +8,6 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .superpowers/
+
+# Machine-specific sync config (copy sync_config.example.yml -> sync_config.yml)
+sync_config.yml
